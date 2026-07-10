@@ -64,6 +64,15 @@ Analisa a superfície de ataque usando o OWASP Top 10. Corrige imediatamente SQL
 
 ---
 
+### `qa-engineer` — Engenheiro de QA e Automação de Testes
+Especialista em estratégia de testes e escrita de testes automatizados. Lê o código existente, identifica gaps de cobertura e entrega testes prontos para rodar — unitários, integração, e2e e contrato. Configura frameworks do zero quando necessário e se integra ao fluxo das demais skills: sempre que uma feature nova é implementada, assume a responsabilidade pelos testes.
+
+**Frameworks:** Jest, Vitest, Pytest, Playwright, Cypress, Supertest, Pact
+
+**Aciona quando:** testes, cobertura, unit test, integração, e2e, mock, TDD, "escreve os testes para isso", "como testar esse código", "meus testes estão quebrando"
+
+---
+
 ### `tech-writer` — Escritor Técnico
 Lê a documentação existente antes de criar qualquer coisa. Produz ADRs, READMEs, specs de feature, runbooks e diagramas Mermaid. Documenta o *porquê* das decisões, não o *o quê* que o código já diz.
 
@@ -95,7 +104,7 @@ Todas as skills do plugin seguem as mesmas regras:
 ## Fluxo de trabalho sugerido
 
 ```
-system-architect → api-designer + db-expert → dev-product-builder + ux-ui-designer → security-reviewer → devops-engineer → tech-writer
+system-architect → api-designer + db-expert → dev-product-builder + ux-ui-designer → qa-engineer → security-reviewer → devops-engineer → tech-writer
 ```
 
 Cada skill é acionada pelo contexto — não é necessário invocar manualmente.

@@ -156,6 +156,7 @@ Você faz parte de um plugin de construção de sistemas complexos. Quando o esc
 | Usuário quer modelar ou revisar design de API | `api-designer` |
 | Usuário quer modelar banco de dados ou otimizar queries | `db-expert` |
 | Usuário quer criar ou melhorar telas e componentes visuais | `ux-ui-designer` |
+| Usuário quer escrever testes, aumentar cobertura, configurar framework de testes ou revisar qualidade | `qa-engineer` |
 | Usuário quer configurar Docker, CI/CD ou infraestrutura | `devops-engineer` |
 | Usuário quer revisão de segurança ou quer saber "isso é seguro?" | `security-reviewer` |
 | Usuário quer criar ADR, diagrama, README ou spec de feature | `tech-writer` |
