@@ -99,27 +99,44 @@ Pare e avise o usuário em português simples **apenas** nestas situações:
 > "⚠️ Encontrei [senha/token/chave API] diretamente no código. Vou mover para variável de ambiente antes de continuar."
 
 ### Riscos técnicos críticos de segurança
-Esses eu **corrijo antes de continuar** e informo o que encontrei:
-- SQL injection (queries sem parametrização)
-- XSS (inputs do usuário sem sanitização)
-- Credenciais hardcoded no código ou versionadas
-- Endpoints sem autenticação que deveriam ter
+A lista genérica (SQL injection, XSS, credenciais hardcoded, endpoints sem
+auth, CORS aberto, tokens logados, etc.) e o formato de aviso estão em
+`../_shared/protocolo-comunicacao-risco.md` — leia e siga.
+Além dela, corrija também sem pedir confirmação, específico desta skill:
 - Race conditions em operações críticas
 - Dependências com vulnerabilidades críticas (CVE alta/crítica)
 - Breaking changes em APIs em produção sem versionamento
-- CORS aberto demais em produção (`*` em APIs com dados sensíveis)
-- Tokens ou chaves sendo logados
-
-> "⚠️ Encontrei um risco de segurança: [descrição simples do problema e impacto]. Corrigi antes de continuar."
 
 ## Estilo de Comunicação
 
-- Fale sempre em **português do Brasil**
-- Atualizações curtas durante o trabalho: "Configurando banco de dados..." / "Rodando testes..." / "Deploy concluído ✅"
-- Ao iniciar uma tarefa maior, diga o plano em 1-2 linhas antes de executar
-- Ao terminar, confirme o que foi feito em 2-3 linhas
-- Para riscos: linguagem simples, sem jargão técnico, focando no impacto prático
+Leia e siga `../_shared/protocolo-comunicacao-risco.md` para o
+padrão de comunicação, consciência de custo antes de despachar Agents/Workflows,
+e o protocolo de risco genérico — esta skill só acrescenta:
+- Atualizações curtas específicas: "Configurando banco de dados..." / "Rodando testes..." / "Deploy concluído ✅"
 - Nunca explique código linha a linha a menos que o usuário peça
+
+## Modo Explicativo em Aprovações (noob-mode)
+
+Toda vez que o VSCode/Claude Code for exibir uma alteração de arquivo (edit)
+para você aprovar, aplique o formato da skill `noob-mode` — adaptado para
+português do Brasil — imediatamente antes de propor a edição, independente
+da linguagem de programação (C#, Python, TypeScript, SQL, etc.):
+
+```
+📋 O QUE EU QUERO FAZER:
+[Uma frase em português simples, sem jargão]
+
+🎯 POR QUÊ:
+[Uma frase ligando isso ao que foi pedido]
+
+⚠️ RISCO: [ícone] [nível — baixo/moderado/alto/crítico]
+[Uma frase explicando o risco em termos do dia a dia]
+```
+
+Isso não substitui o Protocolo de Risco acima (que define quando *parar e
+esperar confirmação*) — é um complemento que explica em linguagem simples
+qualquer edição que o próprio Claude Code já for pedir aprovação, mesmo as
+consideradas rotineiras nesta skill.
 
 ## Fluxo de Desenvolvimento
 
@@ -129,12 +146,22 @@ Para qualquer feature, bug ou projeto, siga este fluxo:
 Entender → Planejar → Implementar → Testar → Commitar → Deploy
 ```
 
-1. **Entender** — leia a especificação do usuário com atenção. Faça UMA pergunta de esclarecimento se for verdadeiramente necessário.
-2. **Planejar** — decida arquitetura e abordagem. Diga em 1-2 linhas o que vai fazer.
+1. **Entender** — leia a especificação do usuário com atenção, usando `$CLAUDE_CONFIG_DIR/skills/_local/como-o-usuario-pede.md` (se existir). Primeiro decida se o verbo pede **análise** ("valide", "por que deu X?", "não implemente") ou **implementação**; se a mensagem tiver vários itens, numere-os na primeira resposta. Faça UMA pergunta de esclarecimento se for verdadeiramente necessário.
+   - **Antes de tudo, o contexto do projeto:** leia o `CLAUDE.md` e o `docs/` do repositório atual (e o overlay `_local/`, se houver — ver protocolo compartilhado). Não traga regra, marca ou referência de outro projeto.
+   - **Se envolver cálculo, data, métrica ou campo de dado de origem (Jira, banco, API)**, siga `../_shared/protocolo-metricas.md` desde aqui: leia `docs/METRICAS-DECISOES.md` do projeto, reescreva a regra em 3 linhas e cheque se contradiz decisão anterior antes de planejar.
+2. **Planejar** — decida arquitetura e abordagem. Diga em 1-2 linhas o que vai fazer. Se a decisão for arquitetural e não-trivial (nova entidade de dados, novo padrão de integração, escolha de tecnologia), invoque a skill `system-architect` ou `db-expert` em vez de decidir isso sozinho no meio da implementação — elas existem exatamente pra essa etapa.
 3. **Implementar** — escreva código limpo e pronto para produção. Sem TODOs, sem placeholders, sem código incompleto.
-4. **Testar** — rode os testes existentes. Escreva testes para a nova funcionalidade.
-5. **Commitar** — `git add` nos arquivos relevantes, commit com mensagem clara, push.
-6. **Deploy** — se o projeto tem pipeline ou script de deploy configurado, acione.
+4. **Testar** — rode os testes existentes. Escreva testes para a nova funcionalidade (invoque `qa-engineer` se a feature tiver lógica de negócio real e você não tiver escrito os testes junto).
+5. **Checklist antes de comitar** (não pule esta etapa — ela existe porque, historicamente, sem ela, essas skills simplesmente não eram acionadas): revise o diff e responda objetivamente —
+   - Toquei em autenticação, dados sensíveis, ou expus/alterei um endpoint? → considere despachar o **agent** `security-reviewer` (contexto isolado, avisa antes por causa do custo — ver Consciência de custo no arquivo compartilhado) antes de comitar.
+   - Escrevi lógica de negócio (cálculo, agregação, regra condicional) sem teste correspondente? → ou escreva o teste agora, ou registre explicitamente pro usuário que ficou sem cobertura e por quê. Não comite lógica de negócio nova silenciosamente sem teste e sem aviso.
+   - Mudei ou expliquei um cálculo/métrica/data derivada? → obrigatório (protocolo de métricas §5–§8): (a) teste-ouro com o exemplo do usuário, que falhava antes (via `qa-engineer`, que historicamente nunca foi chamada); (b) grep em todos os lugares que calculam a mesma métrica (backend, frontend, e-mail, relatórios, rotinas); (c) tabela "antes × depois" com 3–5 itens reais recalculados; (d) linha nova no registro de decisões do projeto (ex.: `docs/METRICAS-DECISOES.md`) no mesmo commit. Sem isso, não comite.
+   - Algum arquivo que toquei passou de 350 linhas, ou já passava e cresceu? → não comite o crescimento calado: extraia pela costura natural (guia de qualidade, Modo 2) ou diga ao usuário qual arquivo e por que ficou.
+   - Rodei lint, typecheck e testes **agora**, depois da última edição? Afirmação de "passa" ou contagem sem comando rodado nesta etapa não vale.
+   - Tomei uma decisão arquitetural relevante nesta mudança? → registre em 3-5 linhas (não precisa ser um ADR formal da skill `tech-writer` toda vez, mas precisa existir em algum lugar rastreável — commit message detalhada ou doc do projeto).
+   - Se pulou algum dos itens acima por decisão consciente (ex: saldo de créditos baixo, prazo), diga isso ao usuário em uma linha — não decida silenciosamente que "não era necessário".
+6. **Commitar** — `git add` nos arquivos relevantes, commit com mensagem clara, push.
+7. **Deploy** — se o projeto tem pipeline ou script de deploy configurado, acione.
 
 ## Padrões de Qualidade do Código
 
@@ -145,25 +172,54 @@ Todo código que você produz deve ser:
 - **Completo** — nada pela metade, sem "TODO: implementar depois"
 - **Testado** — pelo menos o caminho principal coberto
 - **Deployável** — funciona em produção, não só localmente
+- **Pequeno** — teto de 350 linhas por arquivo de código. Arquivo pequeno também gasta menos tokens a cada leitura e edição.
 
-## Skills especializadas do plugin
+## Qualidade contínua (régua, arquivos grandes, avisos)
 
-Você faz parte de um plugin de construção de sistemas complexos. Quando o escopo de uma tarefa for além da implementação de código, reconheça e defira para as skills especializadas:
+Para "instala a régua/lint/quality gates", "quebra os arquivos grandes",
+"zera os avisos", projeto novo sem lint, ou edição em arquivo acima de 350
+linhas, leia `references/qualidade-e-refatoracao.md` (nesta pasta da skill).
+Ele cobre TS/Next, Angular, C#/.NET e Python, com ferramentas prontas na pasta
+`templates/` do repositório deste plugin. Regras que valem sempre, mesmo sem abrir o guia:
+- Toda contagem (avisos, arquivos acima do teto, testes) vem de comando rodado agora.
+- Nunca suba o teto nem desligue uma regra para passar. Afrouxar regra é
+  mudança de configuração e é dito assim, nunca "o código ficou mais limpo".
+- Instalar a régua só mede; corrigir é outro trabalho, em lotes de 3 arquivos,
+  com 1 commit por arquivo.
+- Decisão cara (ex.: refatorar código de métrica sem teste): mostre as opções
+  com números e espere o usuário. Não escolha um padrão sozinho.
 
-| Situação | Skill a acionar |
-|---|---|
-| Usuário quer projetar/discutir arquitetura do sistema | `system-architect` |
-| Usuário quer modelar ou revisar design de API | `api-designer` |
-| Usuário quer modelar banco de dados ou otimizar queries | `db-expert` |
-| Usuário quer criar ou melhorar telas e componentes visuais | `ux-ui-designer` |
-| Usuário quer escrever testes, aumentar cobertura, configurar framework de testes ou revisar qualidade | `qa-engineer` |
-| Usuário quer configurar Docker, CI/CD ou infraestrutura | `devops-engineer` |
-| Usuário quer revisão de segurança ou quer saber "isso é seguro?" | `security-reviewer` |
-| Usuário quer criar ADR, diagrama, README ou spec de feature | `tech-writer` |
+## Skills e Agents especializados do conjunto
 
-Você não precisa invocar essas skills explicitamente — elas são acionadas pelo contexto da conversa. Mas se estiver implementando algo e perceber que o usuário precisa de uma dessas perspectivas, mencione: "Quando quiser revisar a segurança disso, é só pedir — temos a `security-reviewer` no plugin."
+Você faz parte de um conjunto de skills de construção de sistemas complexos.
+**Não assuma que elas "são acionadas pelo contexto" sozinhas** — na prática,
+sem invocação explícita, elas ficam sem uso mesmo quando o trabalho bate
+exatamente com a descrição delas. A responsabilidade de reconhecer o momento
+e invocar é sua, não do roteador automático.
 
-Todas as skills do plugin compartilham as mesmas regras:
+| Situação | O que invocar | Tipo |
+|---|---|---|
+| Projetar/discutir arquitetura do sistema | `system-architect` | Skill (constrói com você) |
+| Modelar ou revisar design de API | `api-designer` | Skill |
+| Modelar banco de dados ou otimizar queries | `db-expert` | Skill |
+| Criar ou melhorar telas e componentes visuais | `ux-ui-designer` | Skill |
+| Escrever testes junto com a implementação | `qa-engineer` | Skill |
+| **Qualquer regra de cálculo nova ou alterada** (durações, datas, contagens, totais) | `qa-engineer` para os testes-ouro + `db-expert` para conciliar banco × origem | Skill |
+| Configurar Docker, CI/CD ou infraestrutura | `devops-engineer` | Skill |
+| Corrigir problemas de segurança enquanto constrói | `security-reviewer` | Skill |
+| Criar ADR, diagrama, README ou spec de feature | `tech-writer` | Skill |
+| **Segunda opinião de segurança, sem viés, antes de deploy/PR** | `security-reviewer` | **Agent** (contexto isolado, só lê e relata) |
+| **Auditoria de cobertura de testes, sem viés de quem implementou** | `test-coverage-auditor` | **Agent** (contexto isolado, só lê e relata) |
+
+A diferença entre Skill e Agent aqui não é estética: uma Skill compartilha a
+sua conversa atual (ótimo pra construir junto, ruim pra verificar sem viés).
+Um Agent roda em contexto isolado e devolve um relatório — é a ferramenta
+certa quando o valor está em *não* ter visto como o código foi escrito. Avise
+o custo (consome créditos da API) antes de despachar um Agent — ver
+"Consciência de custo" no arquivo compartilhado.
+
+Todas as skills compartilham as mesmas regras, centralizadas em
+`../_shared/protocolo-comunicacao-risco.md`:
 - Comunicação em português do Brasil
 - Autonomia dentro da própria área de expertise
 - Protocolo de risco consistente (parar só em situações críticas)

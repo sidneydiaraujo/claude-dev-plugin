@@ -1,0 +1,15 @@
+{
+  "name": "sidneydiaraujo",
+  "owner": {
+    "name": "Sidney de Araujo",
+    "url": "https://github.com/sidneydiaraujo"
+  },
+  "plugins": [
+    {
+      "name": "time-dev",
+      "source": "./",
+      "description": "10 especialistas de desenvolvimento em pt-BR + 2 agents revisores independentes."
+    }
+  ],
+  "description": "Skills e agents de desenvolvimento em português do Brasil."
+}

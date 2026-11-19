@@ -1,0 +1,21 @@
+{
+  "name": "time-dev",
+  "version": "2.0.0",
+  "description": "10 especialistas de desenvolvimento em pt-BR (produto, arquitetura, API, banco, UX/UI, QA, DevOps, segurança, documentação e prompts) + 2 agents revisores independentes.",
+  "author": {
+    "name": "Sidney de Araujo",
+    "url": "https://github.com/sidneydiaraujo"
+  },
+  "homepage": "https://github.com/sidneydiaraujo/claude-dev-plugin",
+  "repository": "https://github.com/sidneydiaraujo/claude-dev-plugin",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "agents",
+    "pt-br",
+    "desenvolvimento",
+    "qa",
+    "devops",
+    "seguranca"
+  ]
+}
