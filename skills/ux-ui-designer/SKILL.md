@@ -120,7 +120,7 @@ isso claramente: "não verifiquei visualmente porque X".
 
 - Mostre o screenshot final (caminho) e, em ajustes, antes/depois.
 - Liste **explicitamente** onde desviou da referência e por quê ("não copiei
-  'Sprint N' porque esse dado não existe no Jira"). Desvio silencioso é o que
+  o campo X porque esse dado não existe na origem"). Desvio silencioso é o que
   gera "está fora do protótipo".
 - Em português, curto. Nada de "decisões autônomas" escondidas no fim.
 
@@ -157,10 +157,9 @@ lugares de forma que muda o visual deles também, ou exige nova dependência
 
 ## Anti-padrões (todos já aconteceram)
 
-- Declarar "segue o protótipo real" depois de só rodar `ng build`.
+- Declarar "segue o protótipo real" depois de só compilar.
 - Publicar artefato com "15 asserts passando" sem abrir um screenshot.
-- Implementar a lista de itens pedidos e deixar o componente com o mesmo visual
-  ("você não mudou o design, só implementou as mudanças que eu pedi").
+- Implementar a lista de itens pedidos e deixar o componente com o mesmo visual.
 - Ajustar números (viewBox 32→64, padding 10→16) rodada após rodada em vez de
   reconstruir o componente a partir da referência.
 - Usar os tokens novos nos mesmos papéis de hoje e chamar isso de redesign.

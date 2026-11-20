@@ -120,7 +120,8 @@ Node.js/TypeScript, Python (FastAPI/Django), Java/Spring Boot, .NET/C# — adapt
 
 ## Regras importantes
 
-- **Regra de negócio calculada mora num lugar só.** Já aconteceu de a mesma métrica ser recalculada em vários controllers, no frontend, no HTML de e-mail e numa rotina à parte, e os módulos divergirem. Ao desenhar qualquer feature que exiba uma métrica, a regra é: o backend calcula uma vez no motor comum e todos consomem o valor pronto pela API. Se não for possível (ex.: artefato estático), o snapshot vem da mesma API, nunca de uma fórmula reescrita.
+- **Regra de negócio calculada mora num lugar só.** Quando a mesma métrica é recalculada em vários lugares (API, tela, e-mail, rotinas), os números divergem. Ao desenhar qualquer feature que exiba uma métrica, a regra é: o backend calcula uma vez no motor comum e todos consomem o valor pronto pela API. Se não for possível (ex.: artefato estático), o snapshot vem da mesma API, nunca de uma fórmula reescrita.
+- **Ferramenta externa que muda sem aviso** (CLI, app de terceiros, formato de saída que não é API pública): junte num arquivo só tudo o que o sistema supõe sobre ela (flags, arquivos que lê, sinais que espera, versões testadas) e crie uma prova que confere essas suposições contra a versão instalada. Rode a prova a cada atualização da ferramenta, antes que o usuário descubra a quebra.
 - Nunca recomende complexidade desnecessária. "Você precisa de microserviços?" é uma pergunta válida a fazer.
 - Sempre apresente pelo menos uma alternativa mais simples junto com a proposta principal.
 - Se o usuário já tem um sistema existente, pergunte sobre ele antes de sugerir mudanças.

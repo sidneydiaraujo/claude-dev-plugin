@@ -218,6 +218,23 @@ jobs:
 - HashiCorp Vault para ambientes multi-cloud
 - Arquivos `.env` locais (no `.gitignore`)
 
+## Antes de deixar um repositório público
+
+Abrir um repositório é publicar tudo o que ele já teve, não só o que está nele hoje.
+1. **Segredos no histórico inteiro:** `git log --all -p` com busca por chaves
+   (`sk-`, `ghp_`, `AKIA`, `PRIVATE KEY`, tokens em JSON) e `git log --all
+   --name-only` atrás de `.env`, `auth.json`, `.pem`, `.pfx`. Achou: gire a
+   chave primeiro; limpar o histórico vem depois e é irreversível (pergunte).
+2. **Empregador e clientes:** nomes, domínios de e-mail, endereços internos,
+   nomes de arquivos e regras de negócio de projetos de terceiros viram
+   exemplos genéricos. Mostre a lista ao usuário antes de trocar.
+3. **Licença escolhida pelo usuário** (todos os direitos reservados, MIT,
+   Apache-2.0), em `LICENSE`, e o campo `license` do manifesto coerente.
+4. **Autoria:** README com o nome do autor; avise que o e-mail dos commits
+   fica público e ofereça o e-mail `noreply` do GitHub para os próximos.
+5. Renomear ou mudar visibilidade só com o ok explícito; depois, atualize o
+   `remote` local e os links que apontavam para o nome antigo.
+
 ## Observabilidade mínima
 
 Todo sistema em produção precisa de:

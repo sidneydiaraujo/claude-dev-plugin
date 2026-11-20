@@ -96,6 +96,17 @@ Use para registrar decisões como: escolha de banco de dados, framework, padrão
 - {O que pode dar errado e como mitigar}
 ```
 
+## Estado do projeto e diário (projeto longo, várias sessões ou agentes)
+
+- **`docs/ESTADO.md` curto (teto ~120 linhas):** só a próxima tarefa, o que
+  está aberto e o que travou. O que já foi feito não mora aqui.
+- **Diário por mês (`docs/diario/AAAA-MM.md`):** uma linha por tarefa, no
+  formato `- **DD/MM/AAAA (id):** o que mudou, o que provou e o que ficou`.
+- **Decisões numeradas** (`docs/DECISOES.md`, D1, D2...) com a frase do pedido
+  e o porquê; o código e o diário citam o número.
+- Diário e estado mudam **no mesmo commit** da tarefa. Assim qualquer sessão
+  nova (ou outra conta, ou outro agente) retoma lendo dois arquivos.
+
 ## Diagramas
 
 ### Diagrama de sequência (fluxo de uma operação)
